@@ -47,8 +47,6 @@ func WithGRPCDialOptions(opts ...grpc.DialOption) Option {
 }
 
 type Client struct {
-	connection *grpc.ClientConn
-
 	systemService         system.SystemServiceClient
 	adminService          admin.AdminServiceClient
 	managementService     management.ManagementServiceClient
@@ -86,7 +84,20 @@ func New(ctx context.Context, zitadel *zitadel.Zitadel, opts ...Option) (*Client
 	}
 
 	return &Client{
-		connection: conn,
+		systemService:         system.NewSystemServiceClient(conn),
+		adminService:          admin.NewAdminServiceClient(conn),
+		managementService:     management.NewManagementServiceClient(conn),
+		userService:           userV2Beta.NewUserServiceClient(conn),
+		userServiceV2:         userV2.NewUserServiceClient(conn),
+		authService:           auth.NewAuthServiceClient(conn),
+		settingsService:       settingsV2Beta.NewSettingsServiceClient(conn),
+		settingsServiceV2:     settingsV2.NewSettingsServiceClient(conn),
+		sessionService:        sessionV2Beta.NewSessionServiceClient(conn),
+		sessionServiceV2:      sessionV2.NewSessionServiceClient(conn),
+		organizationService:   orgV2Beta.NewOrganizationServiceClient(conn),
+		organizationServiceV2: orgV2.NewOrganizationServiceClient(conn),
+		oidcService:           oidcV2Beta_pb.NewOIDCServiceClient(conn),
+		oidcServiceV2:         oidcV2_pb.NewOIDCServiceClient(conn),
 	}, nil
 }
 
@@ -111,99 +122,57 @@ func newConnection(
 }
 
 func (c *Client) SystemService() system.SystemServiceClient {
-	if c.systemService == nil {
-		c.systemService = system.NewSystemServiceClient(c.connection)
-	}
 	return c.systemService
 }
 
 func (c *Client) AdminService() admin.AdminServiceClient {
-	if c.adminService == nil {
-		c.adminService = admin.NewAdminServiceClient(c.connection)
-	}
 	return c.adminService
 }
 
 func (c *Client) ManagementService() management.ManagementServiceClient {
-	if c.managementService == nil {
-		c.managementService = management.NewManagementServiceClient(c.connection)
-	}
 	return c.managementService
 }
 
 func (c *Client) AuthService() auth.AuthServiceClient {
-	if c.authService == nil {
-		c.authService = auth.NewAuthServiceClient(c.connection)
-	}
 	return c.authService
 }
 
 func (c *Client) UserService() userV2Beta.UserServiceClient {
-	if c.userService == nil {
-		c.userService = userV2Beta.NewUserServiceClient(c.connection)
-	}
 	return c.userService
 }
 
 func (c *Client) UserServiceV2() userV2.UserServiceClient {
-	if c.userServiceV2 == nil {
-		c.userServiceV2 = userV2.NewUserServiceClient(c.connection)
-	}
 	return c.userServiceV2
 }
 
 func (c *Client) SettingsService() settingsV2Beta.SettingsServiceClient {
-	if c.settingsService == nil {
-		c.settingsService = settingsV2Beta.NewSettingsServiceClient(c.connection)
-	}
 	return c.settingsService
 }
 
 func (c *Client) SettingsServiceV2() settingsV2.SettingsServiceClient {
-	if c.settingsServiceV2 == nil {
-		c.settingsServiceV2 = settingsV2.NewSettingsServiceClient(c.connection)
-	}
 	return c.settingsServiceV2
 }
 
 func (c *Client) SessionService() sessionV2Beta.SessionServiceClient {
-	if c.sessionService == nil {
-		c.sessionService = sessionV2Beta.NewSessionServiceClient(c.connection)
-	}
 	return c.sessionService
 }
 
 func (c *Client) SessionServiceV2() sessionV2.SessionServiceClient {
-	if c.sessionServiceV2 == nil {
-		c.sessionServiceV2 = sessionV2.NewSessionServiceClient(c.connection)
-	}
 	return c.sessionServiceV2
 }
 
 func (c *Client) OIDCService() oidcV2Beta_pb.OIDCServiceClient {
-	if c.oidcService == nil {
-		c.oidcService = oidcV2Beta_pb.NewOIDCServiceClient(c.connection)
-	}
 	return c.oidcService
 }
 
 func (c *Client) OIDCServiceV2() oidcV2_pb.OIDCServiceClient {
-	if c.oidcServiceV2 == nil {
-		c.oidcServiceV2 = oidcV2_pb.NewOIDCServiceClient(c.connection)
-	}
 	return c.oidcServiceV2
 }
 
 func (c *Client) OrganizationService() orgV2Beta.OrganizationServiceClient {
-	if c.organizationService == nil {
-		c.organizationService = orgV2Beta.NewOrganizationServiceClient(c.connection)
-	}
 	return c.organizationService
 }
 
 func (c *Client) OrganizationServiceV2() orgV2.OrganizationServiceClient {
-	if c.organizationServiceV2 == nil {
-		c.organizationServiceV2 = orgV2.NewOrganizationServiceClient(c.connection)
-	}
 	return c.organizationServiceV2
 }
