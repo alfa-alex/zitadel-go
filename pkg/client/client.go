@@ -24,8 +24,9 @@ import (
 )
 
 type clientOptions struct {
-	initTokenSource TokenSourceInitializer
-	grpcDialOptions []grpc.DialOption
+	initTokenSource       TokenSourceInitializer
+	grpcDialOptions       []grpc.DialOption
+	preInitServiceClients bool
 }
 
 type Option func(*clientOptions)
@@ -43,6 +44,12 @@ func WithAuth(initTokenSource TokenSourceInitializer) Option {
 func WithGRPCDialOptions(opts ...grpc.DialOption) Option {
 	return func(c *clientOptions) {
 		c.grpcDialOptions = append(c.grpcDialOptions, opts...)
+	}
+}
+
+func WithPreInitServiceClients() Option {
+	return func(c *clientOptions) {
+		c.preInitServiceClients = true
 	}
 }
 
@@ -83,6 +90,26 @@ func New(ctx context.Context, zitadel *zitadel.Zitadel, opts ...Option) (*Client
 	conn, err := newConnection(ctx, zitadel, source, options.grpcDialOptions...)
 	if err != nil {
 		return nil, err
+	}
+
+	if options.preInitServiceClients {
+		return &Client{
+			connection:            conn,
+			systemService:         system.NewSystemServiceClient(conn),
+			adminService:          admin.NewAdminServiceClient(conn),
+			managementService:     management.NewManagementServiceClient(conn),
+			userService:           userV2Beta.NewUserServiceClient(conn),
+			userServiceV2:         userV2.NewUserServiceClient(conn),
+			authService:           auth.NewAuthServiceClient(conn),
+			settingsService:       settingsV2Beta.NewSettingsServiceClient(conn),
+			settingsServiceV2:     settingsV2.NewSettingsServiceClient(conn),
+			sessionService:        sessionV2Beta.NewSessionServiceClient(conn),
+			sessionServiceV2:      sessionV2.NewSessionServiceClient(conn),
+			organizationService:   orgV2Beta.NewOrganizationServiceClient(conn),
+			organizationServiceV2: orgV2.NewOrganizationServiceClient(conn),
+			oidcService:           oidcV2Beta_pb.NewOIDCServiceClient(conn),
+			oidcServiceV2:         oidcV2_pb.NewOIDCServiceClient(conn),
+		}, nil
 	}
 
 	return &Client{
