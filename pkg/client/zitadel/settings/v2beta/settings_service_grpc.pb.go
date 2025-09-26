@@ -30,6 +30,9 @@ const (
 	SettingsService_GetLockoutSettings_FullMethodName            = "/zitadel.settings.v2beta.SettingsService/GetLockoutSettings"
 	SettingsService_GetSecuritySettings_FullMethodName           = "/zitadel.settings.v2beta.SettingsService/GetSecuritySettings"
 	SettingsService_SetSecuritySettings_FullMethodName           = "/zitadel.settings.v2beta.SettingsService/SetSecuritySettings"
+	SettingsService_SetOrganizationSettings_FullMethodName       = "/zitadel.settings.v2beta.SettingsService/SetOrganizationSettings"
+	SettingsService_DeleteOrganizationSettings_FullMethodName    = "/zitadel.settings.v2beta.SettingsService/DeleteOrganizationSettings"
+	SettingsService_ListOrganizationSettings_FullMethodName      = "/zitadel.settings.v2beta.SettingsService/ListOrganizationSettings"
 )
 
 // SettingsServiceClient is the client API for SettingsService service.
@@ -58,6 +61,29 @@ type SettingsServiceClient interface {
 	GetSecuritySettings(ctx context.Context, in *GetSecuritySettingsRequest, opts ...grpc.CallOption) (*GetSecuritySettingsResponse, error)
 	// Set the security settings
 	SetSecuritySettings(ctx context.Context, in *SetSecuritySettingsRequest, opts ...grpc.CallOption) (*SetSecuritySettingsResponse, error)
+	// Set Organization Settings
+	//
+	// Sets the settings specific to an organization.
+	// Organization scopes usernames defines that the usernames have to be unique in the organization scope, can only be changed if the usernames of the users are unique in the scope.
+	//
+	// Required permissions:
+	//   - `iam.policy.write`
+	SetOrganizationSettings(ctx context.Context, in *SetOrganizationSettingsRequest, opts ...grpc.CallOption) (*SetOrganizationSettingsResponse, error)
+	// Delete Organization Settings
+	//
+	// Delete the settings specific to an organization.
+	//
+	// Required permissions:
+	//   - `iam.policy.delete`
+	DeleteOrganizationSettings(ctx context.Context, in *DeleteOrganizationSettingsRequest, opts ...grpc.CallOption) (*DeleteOrganizationSettingsResponse, error)
+	// List Organization Settings
+	//
+	// Returns a list of organization settings.
+	//
+	// Required permission:
+	//   - `iam.policy.read`
+	//   - `org.policy.read`
+	ListOrganizationSettings(ctx context.Context, in *ListOrganizationSettingsRequest, opts ...grpc.CallOption) (*ListOrganizationSettingsResponse, error)
 }
 
 type settingsServiceClient struct {
@@ -167,6 +193,33 @@ func (c *settingsServiceClient) SetSecuritySettings(ctx context.Context, in *Set
 	return out, nil
 }
 
+func (c *settingsServiceClient) SetOrganizationSettings(ctx context.Context, in *SetOrganizationSettingsRequest, opts ...grpc.CallOption) (*SetOrganizationSettingsResponse, error) {
+	out := new(SetOrganizationSettingsResponse)
+	err := c.cc.Invoke(ctx, SettingsService_SetOrganizationSettings_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *settingsServiceClient) DeleteOrganizationSettings(ctx context.Context, in *DeleteOrganizationSettingsRequest, opts ...grpc.CallOption) (*DeleteOrganizationSettingsResponse, error) {
+	out := new(DeleteOrganizationSettingsResponse)
+	err := c.cc.Invoke(ctx, SettingsService_DeleteOrganizationSettings_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *settingsServiceClient) ListOrganizationSettings(ctx context.Context, in *ListOrganizationSettingsRequest, opts ...grpc.CallOption) (*ListOrganizationSettingsResponse, error) {
+	out := new(ListOrganizationSettingsResponse)
+	err := c.cc.Invoke(ctx, SettingsService_ListOrganizationSettings_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SettingsServiceServer is the server API for SettingsService service.
 // All implementations must embed UnimplementedSettingsServiceServer
 // for forward compatibility
@@ -193,6 +246,29 @@ type SettingsServiceServer interface {
 	GetSecuritySettings(context.Context, *GetSecuritySettingsRequest) (*GetSecuritySettingsResponse, error)
 	// Set the security settings
 	SetSecuritySettings(context.Context, *SetSecuritySettingsRequest) (*SetSecuritySettingsResponse, error)
+	// Set Organization Settings
+	//
+	// Sets the settings specific to an organization.
+	// Organization scopes usernames defines that the usernames have to be unique in the organization scope, can only be changed if the usernames of the users are unique in the scope.
+	//
+	// Required permissions:
+	//   - `iam.policy.write`
+	SetOrganizationSettings(context.Context, *SetOrganizationSettingsRequest) (*SetOrganizationSettingsResponse, error)
+	// Delete Organization Settings
+	//
+	// Delete the settings specific to an organization.
+	//
+	// Required permissions:
+	//   - `iam.policy.delete`
+	DeleteOrganizationSettings(context.Context, *DeleteOrganizationSettingsRequest) (*DeleteOrganizationSettingsResponse, error)
+	// List Organization Settings
+	//
+	// Returns a list of organization settings.
+	//
+	// Required permission:
+	//   - `iam.policy.read`
+	//   - `org.policy.read`
+	ListOrganizationSettings(context.Context, *ListOrganizationSettingsRequest) (*ListOrganizationSettingsResponse, error)
 	mustEmbedUnimplementedSettingsServiceServer()
 }
 
@@ -232,6 +308,15 @@ func (UnimplementedSettingsServiceServer) GetSecuritySettings(context.Context, *
 }
 func (UnimplementedSettingsServiceServer) SetSecuritySettings(context.Context, *SetSecuritySettingsRequest) (*SetSecuritySettingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetSecuritySettings not implemented")
+}
+func (UnimplementedSettingsServiceServer) SetOrganizationSettings(context.Context, *SetOrganizationSettingsRequest) (*SetOrganizationSettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetOrganizationSettings not implemented")
+}
+func (UnimplementedSettingsServiceServer) DeleteOrganizationSettings(context.Context, *DeleteOrganizationSettingsRequest) (*DeleteOrganizationSettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteOrganizationSettings not implemented")
+}
+func (UnimplementedSettingsServiceServer) ListOrganizationSettings(context.Context, *ListOrganizationSettingsRequest) (*ListOrganizationSettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListOrganizationSettings not implemented")
 }
 func (UnimplementedSettingsServiceServer) mustEmbedUnimplementedSettingsServiceServer() {}
 
@@ -444,6 +529,60 @@ func _SettingsService_SetSecuritySettings_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SettingsService_SetOrganizationSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetOrganizationSettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingsServiceServer).SetOrganizationSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SettingsService_SetOrganizationSettings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingsServiceServer).SetOrganizationSettings(ctx, req.(*SetOrganizationSettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SettingsService_DeleteOrganizationSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteOrganizationSettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingsServiceServer).DeleteOrganizationSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SettingsService_DeleteOrganizationSettings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingsServiceServer).DeleteOrganizationSettings(ctx, req.(*DeleteOrganizationSettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SettingsService_ListOrganizationSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOrganizationSettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingsServiceServer).ListOrganizationSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SettingsService_ListOrganizationSettings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingsServiceServer).ListOrganizationSettings(ctx, req.(*ListOrganizationSettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SettingsService_ServiceDesc is the grpc.ServiceDesc for SettingsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -494,6 +633,18 @@ var SettingsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetSecuritySettings",
 			Handler:    _SettingsService_SetSecuritySettings_Handler,
+		},
+		{
+			MethodName: "SetOrganizationSettings",
+			Handler:    _SettingsService_SetOrganizationSettings_Handler,
+		},
+		{
+			MethodName: "DeleteOrganizationSettings",
+			Handler:    _SettingsService_DeleteOrganizationSettings_Handler,
+		},
+		{
+			MethodName: "ListOrganizationSettings",
+			Handler:    _SettingsService_ListOrganizationSettings_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

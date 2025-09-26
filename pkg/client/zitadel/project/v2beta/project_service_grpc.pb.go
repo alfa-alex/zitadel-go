@@ -169,7 +169,7 @@ type ProjectServiceClient interface {
 	// Returns a list of project grants. A project grant is when the organization grants its project to another organization.
 	//
 	// Required permission:
-	//   - `project.grant.write`
+	//   - `project.grant.read`
 	ListProjectGrants(ctx context.Context, in *ListProjectGrantsRequest, opts ...grpc.CallOption) (*ListProjectGrantsResponse, error)
 }
 
@@ -465,7 +465,7 @@ type ProjectServiceServer interface {
 	// Returns a list of project grants. A project grant is when the organization grants its project to another organization.
 	//
 	// Required permission:
-	//   - `project.grant.write`
+	//   - `project.grant.read`
 	ListProjectGrants(context.Context, *ListProjectGrantsRequest) (*ListProjectGrantsResponse, error)
 	mustEmbedUnimplementedProjectServiceServer()
 }
